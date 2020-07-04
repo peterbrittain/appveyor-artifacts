@@ -464,7 +464,7 @@ def get_urls(config, log):
 
     # Get job IDs. Wait for AppVeyor job to finish.
     job_ids = list()
-    valid_statuses = ['success', 'failed', 'running', 'queued']
+    valid_statuses = ['success', 'failed', 'starting', 'running', 'queued']
     while True:
         job_ids = query_job_ids(build_version, config)
         statuses = set([i[1] for i in job_ids])
