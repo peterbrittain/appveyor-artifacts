@@ -465,6 +465,7 @@ def get_urls(config, log):
     # Get job IDs. Wait for AppVeyor job to finish.
     job_ids = list()
     valid_statuses = ['success', 'failed', 'starting', 'running', 'queued']
+    count = 0
     while True:
         job_ids = query_job_ids(build_version, config)
         statuses = set([i[1] for i in job_ids])
@@ -482,7 +483,9 @@ def get_urls(config, log):
             log.info('Waiting for all jobs to start...')
         else:
             log.error('Got unknown status from AppVeyor API: %s', ' '.join(statuses - set(valid_statuses)))
-            raise HandledError
+            count += 1
+            if count >= 3:
+                raise HandledError
         time.sleep(SLEEP_FOR)
 
     # Get artifacts.
